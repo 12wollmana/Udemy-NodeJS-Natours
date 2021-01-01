@@ -107,6 +107,27 @@ app.patch('/api/v1/tours/:id', (req, res) => {
   });
 });
 
+app.delete('/api/v1/tours/:id', (req, res) => {
+  // Not actually implementing, since this is about express
+
+  const id = req.params.id * 1; // convert to number
+  if (id > tours.length) {
+    return res
+      .status(404) // 404 - Not Found
+      .json({
+        status: 'fail',
+        message: 'Invalid ID',
+      });
+  }
+
+  res
+    .status(204) // 204 - No Content
+    .json({
+      status: 'success',
+      data: null,
+    });
+});
+
 // start up server
 const port = 3000;
 app.listen(port, () => {

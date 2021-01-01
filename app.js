@@ -9,28 +9,15 @@ const app = express(); // app is the standard name
  */
 app.use(express.json()); // Converts body to JSON
 
-/*
- * Root Endpoint
- */
-// app.get('/', (req, res) => {
-//   res
-//     .status(200) // 200 - OK is the default if not used.
-//     .json({ message: 'Hello from the server side!', app: 'Natours' });
-// });
-
-// app.post('/', (req, res) => {
-//   res.send('You can post to this endpoint.');
-// });
-
-/*
- * Tours Endpoint
+/**
+ * Tour Handlers
  */
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success', // can be success, failed, error,
     results: tours.length, // use when sending an array
@@ -38,33 +25,30 @@ app.get('/api/v1/tours', (req, res) => {
       tours, // same as tours: tours
     },
   });
-});
+};
 
-app.get(
-  '/api/v1/tours/:id', // Use : to define param; put ? at end of param for optional param
-  (req, res) => {
-    console.log(req.params);
+const getTour = (req, res) => {
+  console.log(req.params);
 
-    const id = req.params.id * 1; // convert to number
-    const tour = tours.find((el) => el.id === id);
-    //if (id > tours.length) {
-    if (!tour) {
-      return res
-        .status(404) // 404 - Not Found
-        .json({
-          status: 'fail',
-          message: 'Invalid ID',
-        });
-    }
-
-    res.status(200).json({
-      status: 'success',
-      data: { tour },
-    });
+  const id = req.params.id * 1; // convert to number
+  const tour = tours.find((el) => el.id === id);
+  //if (id > tours.length) {
+  if (!tour) {
+    return res
+      .status(404) // 404 - Not Found
+      .json({
+        status: 'fail',
+        message: 'Invalid ID',
+      });
   }
-);
 
-app.post('/api/v1/tours', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    data: { tour },
+  });
+};
+
+const createTour = (req, res) => {
   //   console.log(req.body);
 
   const newId = tours[tours.length - 1].id + 1;
@@ -86,9 +70,9 @@ app.post('/api/v1/tours', (req, res) => {
         });
     }
   );
-});
+};
 
-app.patch('/api/v1/tours/:id', (req, res) => {
+const updateTour = (req, res) => {
   // Not actually implementing, since this is about express
 
   const id = req.params.id * 1; // convert to number
@@ -105,9 +89,9 @@ app.patch('/api/v1/tours/:id', (req, res) => {
     status: 'success',
     data: { tour: '<Updated tour here>' },
   });
-});
+};
 
-app.delete('/api/v1/tours/:id', (req, res) => {
+const deleteTour = (req, res) => {
   // Not actually implementing, since this is about express
 
   const id = req.params.id * 1; // convert to number
@@ -126,7 +110,27 @@ app.delete('/api/v1/tours/:id', (req, res) => {
       status: 'success',
       data: null,
     });
-});
+};
+
+//
+/**
+ * Tour Endpoints
+ * ----------------------
+ * Use : to define param.
+ * Put ? at end of param for optional param
+ */
+//app.get('/api/v1/tours', getAllTours);
+//app.post('/api/v1/tours', createTour);
+// app.get('/api/v1/tours/:id', getTour);
+// app.patch('/api/v1/tours/:id', updateTour);
+// app.delete('/api/v1/tours/:id', deleteTour);
+
+app.route('/api/v1/tours').get(getAllTours).post(createTour);
+app
+  .route('/api/v1/tours/:id')
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
 
 // start up server
 const port = 3000;

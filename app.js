@@ -88,6 +88,25 @@ app.post('/api/v1/tours', (req, res) => {
   );
 });
 
+app.patch('/api/v1/tours/:id', (req, res) => {
+  // Not actually implementing, since this is about express
+
+  const id = req.params.id * 1; // convert to number
+  if (id > tours.length) {
+    return res
+      .status(404) // 404 - Not Found
+      .json({
+        status: 'fail',
+        message: 'Invalid ID',
+      });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: { tour: '<Updated tour here>' },
+  });
+});
+
 // start up server
 const port = 3000;
 app.listen(port, () => {

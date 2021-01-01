@@ -4,6 +4,11 @@ const express = require('express');
 
 const app = express(); // app is the standard name
 
+/**
+ * Middleware
+ */
+app.use(express.json()); // Converts body to JSON
+
 /*
  * Root Endpoint
  */
@@ -24,6 +29,7 @@ const app = express(); // app is the standard name
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
+
 app.get('/api/v1/tours', (req, res) => {
   res.status(200).json({
     status: 'success', // can be success, failed, error,
@@ -32,6 +38,30 @@ app.get('/api/v1/tours', (req, res) => {
       tours, // same as tours: tours
     },
   });
+});
+
+app.post('/api/v1/tours', (req, res) => {
+  //   console.log(req.body);
+
+  const newId = tours[tours.length - 1].id + 1;
+  const newTour = Object.assign({ id: newId }, req.body); // Merge two objects
+
+  tours.push(newTour);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      res
+        .status(201) // 201 - Created
+        .json({
+          status: 'success',
+          data: {
+            tour: newTour,
+          },
+        });
+    }
+  );
 });
 
 // start up server

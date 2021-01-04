@@ -20,6 +20,19 @@ exports.checkID = (req, res, next, val) => {
   next();
 };
 
+exports.checkBody = (req, res, next) => {
+  const body = req.body;
+  if (!body.name || !body.price) {
+    return res
+      .status(400) // 400 - Bad Request
+      .json({
+        status: 'fail',
+        message: 'Missing name or price.',
+      });
+  }
+  next();
+};
+
 exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
 

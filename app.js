@@ -140,18 +140,11 @@ const deleteTour = (req, res) => {
  * Use : to define param.
  * Put ? at end of param for optional param
  */
-//app.get('/api/v1/tours', getAllTours);
-//app.post('/api/v1/tours', createTour);
-// app.get('/api/v1/tours/:id', getTour);
-// app.patch('/api/v1/tours/:id', updateTour);
-// app.delete('/api/v1/tours/:id', deleteTour);
 
-app.route('/api/v1/tours').get(getAllTours).post(createTour);
-app
-  .route('/api/v1/tours/:id')
-  .get(getTour)
-  .patch(updateTour)
-  .delete(deleteTour);
+const tourRouter = express.Router();
+
+tourRouter.route('/').get(getAllTours).post(createTour);
+tourRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
 /**
  * User Handlers
@@ -196,13 +189,17 @@ const deleteUser = (req, res) => {
  * Users Routes
  */
 
-app.route('/api/v1/users').get(getAllUsers).post(createUser);
+const userRouter = express.Router();
 
-app
-  .route('/api/v1/users/:id')
-  .get(getUser)
-  .patch(updateUser)
-  .delete(deleteUser);
+userRouter.route('/').get(getAllUsers).post(createUser);
+
+userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
+
+/**
+ * Routers
+ */
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
 
 /**
  * Start Server

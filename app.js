@@ -14,7 +14,9 @@ const app = express(); // app is the standard name
  * Otherwise won't be called for all endpoints.
  */
 
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.use(express.json()); // Converts body to JSON
 app.use(express.static(`${__dirname}/public`)); // Expose public folder

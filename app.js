@@ -17,6 +17,7 @@ const app = express(); // app is the standard name
 app.use(morgan('dev'));
 
 app.use(express.json()); // Converts body to JSON
+app.use(express.static(`${__dirname}/public`)); // Expose public folder
 
 app.use((req, res, next) => {
   console.log('Hello from the middleware!');

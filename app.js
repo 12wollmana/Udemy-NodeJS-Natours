@@ -6,8 +6,22 @@ const app = express(); // app is the standard name
 
 /**
  * Middleware
+ * --------------
+ * This should be before the endpoints.
+ * Otherwise won't be called for all endpoints.
  */
 app.use(express.json()); // Converts body to JSON
+
+app.use((req, res, next) => {
+  console.log('Hello from the middleware!');
+  // Need to call next function, otherwise middleware won't finish
+  next();
+});
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 /**
  * Tour Handlers
@@ -18,8 +32,11 @@ const tours = JSON.parse(
 );
 
 const getAllTours = (req, res) => {
+  console.log(req.requestTime);
+
   res.status(200).json({
     status: 'success', // can be success, failed, error,
+    requestedAt: req.requestTime,
     results: tours.length, // use when sending an array
     data: {
       tours, // same as tours: tours

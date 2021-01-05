@@ -22,6 +22,7 @@ app.use(express.json()); // Converts body to JSON
 app.use(express.static(`${__dirname}/public`)); // Expose public folder
 
 app.use((req, res, next) => {
+  // eslint-disable-next-line no-console
   console.log('Hello from the middleware!');
   // Need to call next function, otherwise middleware won't finish
   next();

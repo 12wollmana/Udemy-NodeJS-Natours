@@ -5,7 +5,8 @@
  * Put ? at end of param for optional param
  */
 const express = require('express');
-const tourController = require('./../controllers/tourController');
+const tourController = require('../controllers/tourController');
+
 const router = express.Router();
 
 router.param('id', tourController.checkID);

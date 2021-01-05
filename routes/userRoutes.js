@@ -5,7 +5,8 @@
  * Put ? at end of param for optional param
  */
 const express = require('express');
-const userController = require('./../controllers/userController');
+const userController = require('../controllers/userController');
+
 const router = express.Router();
 
 router

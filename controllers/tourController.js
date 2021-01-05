@@ -21,7 +21,7 @@ exports.checkID = (req, res, next, val) => {
 };
 
 exports.checkBody = (req, res, next) => {
-  const body = req.body;
+  const { body } = req;
   if (!body.name || !body.price) {
     return res
       .status(400) // 400 - Bad Request
@@ -34,7 +34,7 @@ exports.checkBody = (req, res, next) => {
 };
 
 exports.getAllTours = (req, res) => {
-  console.log(req.requestTime);
+  //console.log(req.requestTime);
 
   res.status(200).json({
     status: 'success', // can be success, failed, error,
@@ -47,7 +47,7 @@ exports.getAllTours = (req, res) => {
 };
 
 exports.getTour = (req, res) => {
-  console.log(req.params);
+  //console.log(req.params);
 
   const id = req.params.id * 1; // convert to number
   const tour = tours.find((el) => el.id === id);
@@ -62,6 +62,7 @@ exports.createTour = (req, res) => {
   //   console.log(req.body);
 
   const newId = tours[tours.length - 1].id + 1;
+  // eslint-disable-next-line prefer-object-spread
   const newTour = Object.assign({ id: newId }, req.body); // Merge two objects
 
   tours.push(newTour);
@@ -69,7 +70,8 @@ exports.createTour = (req, res) => {
   fs.writeFile(
     `${__dirname}/dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
-    (err) => {
+    // eslint-disable-next-line no-unused-vars
+    (_err) => {
       res
         .status(201) // 201 - Created
         .json({
